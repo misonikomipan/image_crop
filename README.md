@@ -1,0 +1,8 @@
+# image_crop
+画像の切り抜きができるGUIアプリ
+- 矩形切抜き
+
+
+---
+## 実行コマンド
+streamlit run main.py
