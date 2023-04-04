@@ -79,7 +79,7 @@ def main():
             else:
                 pass
             
-            image_cropped.save(f"{saveDir}{imgName}_cropped.png") # alphaを含んでいると保存できないのでRBGに変換
+            image_cropped.save(f"{saveDir}{imgName}_cropped.png")
             st.success("切り抜き画像を保存しました")
 
 if __name__ == '__main__':
