@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from PIL import Image, ImageDraw
 
@@ -70,7 +71,15 @@ def main():
         # 切り抜き画像を保存
         save_button = st.button("保存")
         if save_button:
-            image_cropped.save("./dst/cropped_image.png") # alphaを含んでいると保存できないのでRBGに変換
+            saveDir = "./dst/"
+            imgName = uploaded_file.name.split(".")[0]
+            # 保存用フォルダがない場合は生成
+            if not os.path.exists(saveDir): 
+                os.makedirs(saveDir)
+            else:
+                pass
+            
+            image_cropped.save(f"{saveDir}{imgName}_cropped.png") # alphaを含んでいると保存できないのでRBGに変換
             st.success("切り抜き画像を保存しました")
 
 if __name__ == '__main__':
