@@ -21,6 +21,9 @@ def main():
         # 画像を表示
         st.image(image, caption="Uploaded Image", use_column_width=True)
         
+        # 切り抜きの形状を選択
+        shape = st.radio("切り抜く形状を選択してください", ("円形", "矩形"))
+
         # 切り抜き用マスク生成
         mask = Image.new("L", image.size, 0)
         draw_mask = ImageDraw.Draw(mask)
@@ -32,15 +35,30 @@ def main():
 
         # 切り抜き領域の指定
         st.sidebar.write("パラメータの設定")
-        # 切り抜き領域の座標を取得
-        left, right = st.sidebar.slider("横（左端，右端）", 0, width, (0, width), 1)
-        top, bottom = st.sidebar.slider("縦（上端，下端）", 0, height, (0, height), 1)
+        if shape == "円形":
+            # 切り抜き領域の座標を取得
+            radius = st.sidebar.slider("半径", 1, min(width, height)//2 - 1, 100)
+            center_x = st.sidebar.slider("中心座標（横）", radius, width - radius, radius)
+            center_y = st.sidebar.slider("中心座標（縦）", radius, height - radius, radius)
 
-        # マスクの生成
-        draw_mask.rectangle((left, top, right, bottom), fill=255)
-        draw_mask_preview.rectangle((left, top, right, bottom), fill=255)
+            # マスクの生成
+            left, right = center_x - radius, center_x + radius
+            top, bottom = center_y - radius, center_y + radius
+            draw_mask.ellipse((left, top, right, bottom), fill=255)
+            draw_mask_preview.ellipse((left, top, right, bottom), fill=255)
 
-        
+        elif shape == "矩形":
+            # 切り抜き領域の座標を取得
+            left, right = st.sidebar.slider("横（左端，右端）", 0, width, (0, width), 1)
+            top, bottom = st.sidebar.slider("縦（上端，下端）", 0, height, (0, height), 1)
+
+            # マスクの生成
+            draw_mask.rectangle((left, top, right, bottom), fill=255)
+            draw_mask_preview.rectangle((left, top, right, bottom), fill=255)
+
+        else:
+            st.error('今のところ矩形か円形しか対応してないよ', icon="🚨")
+
         # マスクの適用
         image_cropped.putalpha(mask)
         image_cropped = image_cropped.crop((left, top, right, bottom))
