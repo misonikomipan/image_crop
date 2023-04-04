@@ -70,7 +70,7 @@ def main():
         # 切り抜き画像を保存
         save_button = st.button("保存")
         if save_button:
-            image_cropped.save("cropped_image.png") # alphaを含んでいると保存できないのでRBGに変換
+            image_cropped.save("./dst/cropped_image.png") # alphaを含んでいると保存できないのでRBGに変換
             st.success("切り抜き画像を保存しました")
 
 if __name__ == '__main__':
